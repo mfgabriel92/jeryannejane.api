@@ -1,0 +1,18 @@
+server:
+  address: 0.0.0.0
+  port: ${PORT:8080}
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:${DB_DATABASE}://${DB_HOSTNAME}/${DB_NAME}?${DB_PARAMS}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+      idle-timeout: 300000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
