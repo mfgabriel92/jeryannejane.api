@@ -1,0 +1,19 @@
+server:
+  address: 0.0.0.0
+  port: ${PORT:8080}
+spring:
+  application:
+    name: jeryannejane.api
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_HOSTNAME}/${DB_NAME}?sslmode=require&channel_binding=require
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+      idle-timeout: 300000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
