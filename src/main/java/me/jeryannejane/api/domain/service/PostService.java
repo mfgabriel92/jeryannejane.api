@@ -1,8 +1,11 @@
 package me.jeryannejane.api.domain.service;
 
+import lombok.RequiredArgsConstructor;
+import me.jeryannejane.api.api.response.PostSummaryResponse;
 import me.jeryannejane.api.domain.model.Post;
 import me.jeryannejane.api.domain.repository.PostRepository;
-import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +14,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final ModelMapper mapper;
 
-    public List<Post> findLatest3() {
-        return postRepository.findLatest3();
+    @Cacheable(value = "latest-posts", keyGenerator = "customKeyGenerator")
+    public List<PostSummaryResponse> findLatest3() {
+        var posts = postRepository.findLatest3();
+        return map(posts);
+    }
+
+    private PostSummaryResponse map(Post post) {
+        return mapper.map(post, PostSummaryResponse.class);
+    }
+
+    private List<PostSummaryResponse> map(List<Post> posts) {
+        return posts.stream()
+            .map(this::map)
+            .toList();
     }
 }

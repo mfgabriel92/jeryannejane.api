@@ -1,6 +1,6 @@
 server:
   address: 0.0.0.0
-  port: ${PORT:8080}
+  port: ${PORT}
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -12,7 +12,13 @@ spring:
       maximum-pool-size: 5
       idle-timeout: 300000
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: ${REDIS_HOSTNAME}
+      port: ${REDIS_PORT}
+app:
+  redis:
+    ttl: ${REDIS_TTL}
