@@ -29,6 +29,8 @@ public class Post {
 
     private String content;
 
+    private String image;
+
     @CreationTimestamp
     private OffsetDateTime createdAt;
 

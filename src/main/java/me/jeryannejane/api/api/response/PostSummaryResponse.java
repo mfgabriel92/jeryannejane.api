@@ -15,5 +15,7 @@ public class PostSummaryResponse implements Serializable {
 
     private String slug;
 
+    private String image;
+
     private OffsetDateTime createdAt;
 }
