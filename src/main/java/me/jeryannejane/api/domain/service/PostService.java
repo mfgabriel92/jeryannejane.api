@@ -1,7 +1,10 @@
 package me.jeryannejane.api.domain.service;
 
 import lombok.RequiredArgsConstructor;
+import me.jeryannejane.api.api.response.ListResponse;
+import me.jeryannejane.api.api.response.PostResponse;
 import me.jeryannejane.api.api.response.PostSummaryResponse;
+import me.jeryannejane.api.domain.exception.EntityNotFoundException;
 import me.jeryannejane.api.domain.model.Post;
 import me.jeryannejane.api.domain.repository.PostRepository;
 import org.modelmapper.ModelMapper;
@@ -17,9 +20,21 @@ public class PostService {
     private final ModelMapper mapper;
 
     @Cacheable(value = "latest-posts", keyGenerator = "customKeyGenerator")
-    public List<PostSummaryResponse> findLatest3() {
+    public ListResponse<PostSummaryResponse> findLatest3() {
         var posts = postRepository.findLatest3();
-        return map(posts);
+        return new ListResponse<>(map(posts));
+    }
+
+    @Cacheable(value = "post", keyGenerator = "customKeyGenerator")
+    public PostResponse findBySlug(String slug) {
+        var post = findOrFail(slug);
+        return mapper.map(post, PostResponse.class);
+    }
+
+    private Post findOrFail(String slug) {
+        return postRepository
+            .findBySlug(slug)
+            .orElseThrow(EntityNotFoundException::new);
     }
 
     private PostSummaryResponse map(Post post) {
