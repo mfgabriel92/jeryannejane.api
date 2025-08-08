@@ -1,6 +1,8 @@
 package me.jeryannejane.api.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -30,12 +32,21 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration() {
+    public ObjectMapper objectMapper() {
         var mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(WRITE_DATES_AS_TIMESTAMPS);
+        mapper.activateDefaultTyping(
+            LaissezFaireSubTypeValidator.instance,
+            ObjectMapper.DefaultTyping.NON_FINAL,
+            JsonTypeInfo.As.PROPERTY
+        );
+        return mapper;
+    }
 
-        var serializer = new GenericJackson2JsonRedisSerializer(mapper);
+    @Bean
+    public RedisCacheConfiguration redisCacheConfiguration() {
+        var serializer = new GenericJackson2JsonRedisSerializer(objectMapper());
 
         return RedisCacheConfiguration.defaultCacheConfig()
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
