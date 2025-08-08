@@ -23,11 +23,11 @@ public class PostController {
     @GetMapping("latest")
     public ResponseEntity<List<PostSummaryResponse>> findLatest3() {
         var post = postService.findLatest3();
-        return ok(post.getData());
+        return ok(post);
     }
 
     @GetMapping("{slug}")
-    public ResponseEntity<PostResponse> findBySlug(@PathVariable String slug) {
+    public ResponseEntity<List<PostResponse>> findBySlug(@PathVariable String slug) {
         var post = postService.findBySlug(slug);
         return ok(post);
     }

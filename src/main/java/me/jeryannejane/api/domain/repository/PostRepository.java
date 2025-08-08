@@ -14,5 +14,5 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     @Query("FROM Post p ORDER BY p.createdAt ASC LIMIT 3")
     List<Post> findLatest3();
 
-    Optional<Post> findBySlug(String slug);
+    Optional<List<Post>> findBySlug(String slug);
 }

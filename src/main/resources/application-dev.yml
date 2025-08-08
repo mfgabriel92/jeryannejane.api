@@ -13,9 +13,6 @@ spring:
   data:
     redis:
       host: localhost
-  devtools:
-    restart:
-      enabled: false
 app:
   redis:
     ttl: 1
